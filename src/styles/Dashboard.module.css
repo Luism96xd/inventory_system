@@ -1,0 +1,81 @@
+.flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .flex {
+    display: flex;
+  }
+  
+  .container {
+    display: flex;
+    width: 100%;
+    padding: 24px;
+    height:auto;
+    justify-content: space-between;
+  }
+  
+  .cards {
+    position: relative;
+    min-height: 150px;
+    gap: 32px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .graphs {
+    position: relative;
+    min-height: 350px;
+    gap: 32px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    flex: 1 1 200px;
+  }
+  
+  .card .i{
+    font-size: 3em;
+    position: absolute;
+  }
+  
+  .graph {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    flex: 1 1 350px;
+    min-height: 500px;
+  }
+  
+  .card h3 {
+    margin-top: 0;
+  }
+  
+  .rojo {
+    background-color: #ffabab;
+  }
+  
+  .verde{
+    background-color: #bffcc6;
+  }
+  
+  .morado {
+    background-color: #d5aaff;
+  }
+  
+  .graph h3 {
+    margin-top: 0;
+    text-align: center;
+  }
+  
+  
+  

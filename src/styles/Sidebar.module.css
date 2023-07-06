@@ -1,0 +1,84 @@
+.sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #2e266d;
+  width: 70px;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+  color: white;
+}
+.sidebar.active {
+  width: 300px;
+}
+.sidebar .option{
+  opacity: 1;
+  display: flex;
+}
+
+.sidebar:not(.active) .option{
+  opacity: 0;
+  display: none;
+}
+
+.head {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 8px 10px;
+}
+
+.head img {
+  width: 60px;
+  border-radius: 50%;
+}
+.sidebar:not(.active) .profile,
+.sidebar:not(.active) .head img{
+  display: none;
+}
+
+.profile {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  color: white;
+}
+
+.options a {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 1.1rem;
+}
+
+.options a:hover {
+  background-color: rgba(255, 255, 255, 0.254);
+  transition: all .4s ease-in-out;
+}
+
+.options .icon{
+  font-size: 1.4rem;
+  margin-right: 10px;
+  transition: all 0.5s ease-in-out;
+}
+
+.sidebar:not(.active) .icon{
+  transition: all 0.5s ease-in-out;
+  margin-left: auto;
+}
+
+.sidebar ul li {
+  padding: 8px 10px;
+  width: 100%;
+}
+
+
+.sidebar ul li:hover {
+  background-color: #88a8ff;
+}
