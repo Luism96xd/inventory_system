@@ -5,7 +5,7 @@ import styles from '@/styles/Tables.module.css';
 import { useSortableTable } from "@/hooks/useSortableTable";
 
 const Table = ({ caption, data, columns, id}) => {
-    const [tableData, handleSorting] = useSortableTable(data, columns, id);
+    //const [tableData, handleSorting] = useSortableTable(data, columns, id);
     return (
 
         <table className={styles["custom-table"]}>
