@@ -10,7 +10,7 @@ const Table = ({ caption, data, columns, id}) => {
 
         <table className={styles["custom-table"]}>
             <caption className="font-semibold pb-4">{caption}</caption>
-            <TableHead columns={columns} handleSorting={handleSorting} />
+            <TableHead columns={columns} /> {/*handleSorting={handleSorting} */}
             <TableBody columns={columns} tableData={data} id={id}/>
         </table>
 
