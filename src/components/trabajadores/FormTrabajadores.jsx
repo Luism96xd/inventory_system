@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from "@/styles/Forms.module.css";
-import Searchbox from './SearchBox';
+import Searchbox from '@/components/SearchBox';
 import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 
@@ -18,7 +18,6 @@ const FormTrabajadores = () => {
     useEffect(() => {
         const getData = async () => {
             const { data } = await supabase.from('cargos').select();
-            console.log(data)
             setCargos(data)
         }
         getData()

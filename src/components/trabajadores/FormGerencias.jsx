@@ -1,43 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from "@/styles/Forms.module.css";
-import Searchbox from './SearchBox';
-import { supabase } from '@/lib/supabase-client';
+import Searchbox from '@/components/SearchBox';
 import axios from 'axios';
 
-const FormAreas = () => {
-    const [gerencia, setGerencia] = useState(null);
+function FormGerencias() {
     const [descripcion, setDescripcion] = useState("");
-    const [gerencias, setGerencias] = useState([]);
 
-    useEffect(() => {
-        const getData = async () => {
-            const { data } = await supabase.from('gerencias').select();
-            console.log(data)
-            setGerencias(data)
-        }
-        getData()
-
-    }, [])
-
-    const handleOnGerenciaChange = (value) => {
-        setGerencia(value);
-    }
     const handleSave = async (e) => {
         e.preventDefault();
-        console.log(gerencia.id_gerencia)
-        if(gerencia.id_gerencia != null){
-            const data = {
-                descripcion: descripcion,
-                idGerencia: gerencia.id_gerencia
-            }
-            console.log(data);
-            const response = await axios.post('/api/areas', data);
-            console.log(response)
+        const data = {
+            descripcion: descripcion
         }
+        console.log(data);
+        const response = await axios.post('/api/gerencias', data);
+        console.log(response)
         setDescripcion("");
-        setGerencia(null);
+
     }
     return (
         <form onSubmit={handleSave}>
@@ -52,16 +32,6 @@ const FormAreas = () => {
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </label>
-            </div>
-            <div className="w-full p-4">
-                <Searchbox
-                    onChange={handleOnGerenciaChange}
-                    value={(gerencia && gerencia.descripcion) ?? ""}
-                    label={"Gerencia"}
-                    list={gerencias}
-                    identifier={"id_gerencia"}
-                    accessor={"descripcion"}
-                />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
                 <button className={`btn bg-white text-black`}>
@@ -81,4 +51,4 @@ const FormAreas = () => {
     )
 }
 
-export default FormAreas;
+export default FormGerencias;

@@ -1,7 +1,18 @@
 import Image from 'next/image';
 import styles from '@/styles/Dashboard.module.css';
+import { supabase } from '@/lib/supabase-client';
 
-const Dashboard = () => {
+export const revalidate = 5;
+
+const getTrabajadores = async () => {
+  const count  = (((await supabase.from('trabajadores').select("*")).count));
+  console.log(count);
+  return count ?? 0;
+}
+
+const Dashboard = async () => {
+    const totalTrabajadores = await getTrabajadores();
+
     return (
         <main className={`${styles["container"]} ${styles["flex-col"]}`}>
             <div className={`${styles["flex"]}  ${styles["cards"]}`}>
@@ -13,6 +24,7 @@ const Dashboard = () => {
                 <div className={`${styles["card"]} ${styles["verde"]}`}>
                     <h3>Total Empleados</h3>
                     <p>Registrados a la fecha</p>
+                    <h2 className='text-center text-2xl text-bold'>{totalTrabajadores}</h2>
                 </div>
                 <div className={`${styles["card"]} ${styles["morado"]}`}>
                     <h3>Otros</h3>

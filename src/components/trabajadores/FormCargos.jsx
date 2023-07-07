@@ -1,24 +1,44 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from "@/styles/Forms.module.css";
-import Searchbox from './SearchBox';
+import Searchbox from '@/components/SearchBox';
+import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 
-function FormGerencias() {
+function FormCargos() {
+    const [area, setArea] = useState(null);
     const [descripcion, setDescripcion] = useState("");
+    const [areas, setAreas] = useState(null);
 
+    useEffect(() => {
+        const getData = async () => {
+            const { data } = await supabase.from('areas').select();
+            setAreas(data)
+        }
+        getData()
+    }, [])
+        
+    const handleOnAreaChange = (value) => {
+        setArea(value);
+    }
+    
     const handleSave = async (e) => {
         e.preventDefault();
+        if(area.id_area == null){
+            return
+        }
         const data = {
-            descripcion: descripcion
+            descripcion: descripcion,
+            idArea: area.id_area
         }
         console.log(data);
-        const response = await axios.post('/api/gerencias', data);
+        const response = await axios.post('/api/cargos', data);
         console.log(response)
         setDescripcion("");
-
+        setArea(null);
     }
+    
     return (
         <form onSubmit={handleSave}>
             <div className='w-full p-4'>
@@ -32,6 +52,16 @@ function FormGerencias() {
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </label>
+            </div>
+            <div className="w-full p-4">
+                <Searchbox
+                    onChange={handleOnAreaChange}
+                    value={(area && area.descripcion) ?? ""}
+                    label={"Area"}
+                    list={areas}
+                    accessor={'descripcion'}
+                    identifier={'id_area'}
+                />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
                 <button className={`btn bg-white text-black`}>
@@ -51,4 +81,4 @@ function FormGerencias() {
     )
 }
 
-export default FormGerencias;
+export default FormCargos

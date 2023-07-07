@@ -1,45 +1,43 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "@/styles/Forms.module.css";
-import Searchbox from './SearchBox';
+import Searchbox from '@/components/SearchBox';
 import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 
-function FormCargos() {
-    const [area, setArea] = useState(null);
+const FormAreas = () => {
+    const [gerencia, setGerencia] = useState(null);
     const [descripcion, setDescripcion] = useState("");
-    const [areas, setAreas] = useState(null);
+    const [gerencias, setGerencias] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
-            const { data } = await supabase.from('areas').select();
-            console.log(data)
-            setAreas(data)
+            const { data } = await supabase.from('gerencias').select();
+            setGerencias(data)
         }
         getData()
+
     }, [])
-        
-    const handleOnAreaChange = (value) => {
-        setArea(value);
+
+    const handleOnGerenciaChange = (value) => {
+        setGerencia(value);
     }
-    
     const handleSave = async (e) => {
         e.preventDefault();
-        if(area.id_area == null){
-            return
+        console.log(gerencia.id_gerencia)
+        if(gerencia.id_gerencia != null){
+            const data = {
+                descripcion: descripcion,
+                idGerencia: gerencia.id_gerencia
+            }
+            console.log(data);
+            const response = await axios.post('/api/areas', data);
+            console.log(response)
         }
-        const data = {
-            descripcion: descripcion,
-            idArea: area.id_area
-        }
-        console.log(data);
-        const response = await axios.post('/api/cargos', data);
-        console.log(response)
         setDescripcion("");
-        setArea(null);
+        setGerencia(null);
     }
-    
     return (
         <form onSubmit={handleSave}>
             <div className='w-full p-4'>
@@ -56,12 +54,12 @@ function FormCargos() {
             </div>
             <div className="w-full p-4">
                 <Searchbox
-                    onChange={handleOnAreaChange}
-                    value={(area && area.descripcion) ?? ""}
-                    label={"Area"}
-                    list={areas}
-                    accessor={'descripcion'}
-                    identifier={'id_area'}
+                    onChange={handleOnGerenciaChange}
+                    value={(gerencia && gerencia.descripcion) ?? ""}
+                    label={"Gerencia"}
+                    list={gerencias}
+                    identifier={"id_gerencia"}
+                    accessor={"descripcion"}
                 />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
@@ -82,4 +80,4 @@ function FormCargos() {
     )
 }
 
-export default FormCargos
+export default FormAreas;

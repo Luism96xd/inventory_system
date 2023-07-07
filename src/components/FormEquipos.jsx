@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from "@/styles/Forms.module.css";
-import Searchbox from './SearchBox';
+import Searchbox from '@/components/SearchBox';
 
 const FormEquipos = () => {
   const [marca, setMarca] = useState(null);

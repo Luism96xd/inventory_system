@@ -1,12 +1,17 @@
 "use client";
 import { useState } from 'react';
 import styles from '@/styles/Tabs.module.css';
+import { useStore } from '../stores/store';
 
-const TabbedView = ({ tabs })=> {
+const TabbedView = ({ tabs, handleOnTabChange}) => {
   const [activeTab, setActiveTab] = useState(0);
+  const {setCurrentTab} = useStore.getState();
 
   const handleTabClick = (tabIndex) => {
     setActiveTab(tabIndex);
+    setCurrentTab(tabIndex);
+    handleOnTabChange(tabIndex)
+    //console.log(useStore.getState().currentTab)
   };
 
   const activeTabContent = tabs[activeTab]?.content;

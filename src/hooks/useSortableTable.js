@@ -3,7 +3,6 @@ import { useState } from "react";
 function getDefaultSorting(defaultTableData, columns, id) {
     const sorted = [...defaultTableData].sort((a, b) => {
         const filterColumn = columns.filter((column) => column.sortbyOrder);
-
         // Merge all array objects into single object and extract accessor and sortbyOrder keys
         let { accessor = id, sortbyOrder = "asc" } = Object.assign(
             {},
@@ -13,7 +12,7 @@ function getDefaultSorting(defaultTableData, columns, id) {
         if (a[accessor] === null) return 1;
         if (b[accessor] === null) return -1;
         if (a[accessor] === null && b[accessor] === null) return 0;
-
+        
         const ascending = a[accessor]
             .toString()
             .localeCompare(b[accessor].toString(), "en", {
@@ -25,12 +24,13 @@ function getDefaultSorting(defaultTableData, columns, id) {
     return sorted;
 }
 
-export const useSortableTable = (data, columns, accessor) => {
-    const [tableData, setTableData] = useState(getDefaultSorting(data, columns, accessor));
-
+export const useSortableTable = (data, columns, id) => {
+    const [tableData, setTableData] = useState(getDefaultSorting(data, columns, id))
     const handleSorting = (sortField, sortOrder) => {
+        console.log(sortField, sortOrder)
         if (sortField) {
             const sorted = [...tableData].sort((a, b) => {
+                console.log(a[sortField], b[sortField])
                 if (a[sortField] === null) return 1;
                 if (b[sortField] === null) return -1;
                 if (a[sortField] === null && b[sortField] === null) return 0;
