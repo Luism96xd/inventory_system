@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 const FormEquipos = ({data}) => {
-  const idEquipo = data.id_equipo;
+  const idEquipo = data?.id_equipo;
 
   const [marca, setMarca] = useState(data ? data.marcas : "");
   const [modelo, setModelo] = useState(data ? data.modelos : "");
