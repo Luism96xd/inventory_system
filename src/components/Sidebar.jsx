@@ -1,13 +1,31 @@
 "use client";
 
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '@/styles/Sidebar.module.css';
 import { BiSolidDashboard, BiSolidUserPin, BiSolidDevices, BiSolidWrench, BiSolidReport } from "react-icons/bi";
 import Link from 'next/link';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuVisible(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuRef]);
+
+  function toggleMenuVisibility() {
+    setIsMenuVisible(!isMenuVisible);
+  }
 
   return (
     <>
@@ -33,10 +51,29 @@ const Sidebar = () => {
             <BiSolidDashboard className={styles['icon']} />
             <span className={styles["option"]}>Dashboard</span>
           </Link>
-          <Link href="/equipos">
-            <BiSolidDevices className={styles['icon']} />
-            <span className={styles["option"]}>Equipos</span>
-          </Link>
+          <div className='w-full' onClick={toggleMenuVisibility}>
+            <Link href="/equipos">
+              <BiSolidDevices className={styles['icon']} />
+              <span className={styles["option"]}>Equipos</span>
+            </Link>
+            {isMenuVisible && (
+              <div className="dropdown-menu">
+                <Link href="/familias">
+                  <span className={styles["option dropdown-item"]}>Familias</span>
+                </Link>
+                <Link href="/contratos">
+                  <span className={styles["option dropdown-item"]}>Contratos</span>
+                </Link>
+                <Link href="/sedes">
+                  <span className={styles["option dropdown-item"]}>Sedes</span>
+                </Link>
+                <Link href="/unidmedidas">
+                  <span className={styles["option dropdown-item"]}>Unidades de Medida</span>
+                </Link>
+              </div>
+            )}
+
+          </div>
           <Link href="/trabajadores">
             <BiSolidUserPin className={styles['icon']} />
             <span className={styles["option"]}>Trabajadores</span>

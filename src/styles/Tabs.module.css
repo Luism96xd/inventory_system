@@ -9,7 +9,7 @@
   .tab-list .tab {
     background-color: white;
     cursor: pointer;
-    padding: 16px 24px;
+    padding: 8px 16px;
     font-weight: 500;
     transition: border-color 0.2s ease-in-out;
     border-top: 1px solid black;

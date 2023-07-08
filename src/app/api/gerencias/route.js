@@ -8,7 +8,7 @@ export async function POST(request) {
     const { data, error } = await supabase
         .from('gerencias')
         .insert([
-            { descripcion: descripcion },
+            { gerencias_descripcion: descripcion },
         ])
         .select()
 

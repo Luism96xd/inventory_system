@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Equipo = () => {
+const Equipo = ({params}) => {
   return (
-    <div>page</div>
+    <div>{`Equipo ${params.id}`}</div>
   )
 }
 

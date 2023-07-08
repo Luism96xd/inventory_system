@@ -1,131 +1,151 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
+import { supabase } from '@/lib/supabase-client';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-const FormEquipos = () => {
+const FormEquipos = ({id}) => {
   const [marca, setMarca] = useState(null);
   const [modelo, setModelo] = useState(null);
-  const [ubicacion, setUbicacion] = useState(null);
-  const [serie, setSerie] = useState(0);
   const [familia, setFamilia] = useState(null);
-  const [subfamilia, setSubfamilia]= useState(null); 
-  const [inventoryNumber, setInventoryNumber] = useState(0);
+  const [subfamilia, setSubfamilia] = useState(null);
+  const [ubicacion, setUbicacion] = useState(null);
+  const [serie, setSerie] = useState("");
+  const [inventoryNumber, setInventoryNumber] = useState("");
+  //Listas
+  const [modelos, setModelos] = useState([]);
+  const [subfamilias, setSubfamilias] = useState([]);
+  const [sedes, setSedes] = useState([]);
+  const router = useRouter();
 
-  const marcas = [
-    { id: 1, name: 'Marca 1' },
-    { id: 2, name: 'Marca 2' },
-    { id: 3, name: 'Marca 3' },
-  ];
-  const modelos = [
-    { id: 1, name: 'Modelo 1', marca: 'Samsung' },
-    { id: 2, name: 'Modelo 2', marca:'LG' },
-    { id: 3, name: 'Modelo 3', marca: 'Xiaomi' },
-  ];
-
-  const ubicaciones = [
-    { id: 1, name: 'Almacén 1' },
-    { id: 2, name: 'Almacén 2' },
-    { id: 3, name: 'Almacén 3' },
-  ];
-  const familias = [
-    { id: 1, name: 'Monitores', subfamilia: 'Monitor LCD' },
-    { id: 2, name: 'Teclados',  subfamilia: 'Teclado de Membrana'},
-    { id: 3, name: 'CPUs',  subfamilia: 'Intel Core I7' },
-  ];
+  useEffect(() => {
+    const getData = async () => {
+      const { data: modelos, error: error_modelos } = await supabase.from('modelos').select(`
+        id_modelo,
+        modelos_descripcion,
+        marcas (id_marca, marcas_descripcion, id_subfamilia)
+      `)
+      const { data: subfamilias, error: error_subfamilias } = await supabase.from('subfamilias').select(`
+        id_subfamilia,
+        subfamilias_descripcion,
+        familias (id_familia, familias_descripcion)
+      `)
+      const { data: sedes, error: error_sedes } = await supabase.from('sedes').select();
+      setSedes(sedes)
+      setModelos(modelos)
+      setSubfamilias(subfamilias)
+    }
+    getData();
+  }, [])
 
 
-  const handleOnMarcaChange = (value) => {
-    setMarca(value);
-    console.log(marca);
-  }
   const handleOnModeloChange = (value) => {
     setModelo(value);
-    console.log(marca);
+    setMarca(value.marcas)
+    setSubfamilia(subfamilias[0])
+    setFamilia(subfamilias[0].familias)
   }
+
   const handleOnUbicacionesChange = (value) => {
     setUbicacion(value);
     console.log(ubicacion);
   }
-  const handleOnFamiliaChange = (value) => {
-    setFamilia(value);
-    setSubfamilia(value.subfamilia)
-    console.log(familia);
-    console.log(subfamilia);
-  }
-  const handleSave = (e) => {
+
+  const handleSave = async (e) => {
     e.preventDefault();
     const data = {
-      modelo: modelo.id,
-      marca: marca.id,
-      familia: familia.id,
-      subfamilia: subfamilia.id,
+      idModelo: modelo.id_modelo,
+      idMarca: marca.id_marca,
+      idFamilia: familia.id_familia,
+      idSubfamilia: subfamilia.id_subfamilia,
       serie: serie,
       inventoryNumber: inventoryNumber,
-      ubicacion: ubicacion.id
+      idSede: ubicacion.id_sede
     }
     console.log(data);
-  } 
+    const response = await axios.post('/api/equipos', data);
+    console.log(response)
+    setMarca(null);
+    setModelo(null);
+    setFamilia(null);
+    setSubfamilia(null);
+    setSerie("");
+    setInventoryNumber("");
+    setUbicacion(null)
+    router.refresh()
+  }
 
   return (
-    <form onSubmit={handleSave} className={`${styles.form} w-full flex flex-col`}>
-      <div className='grid grid-cols-2 gap-4'>
-        <Searchbox 
-          onChange={handleOnMarcaChange} 
-          value={(marca && marca.name || modelo && modelo.marca) ?? ""} 
-          label={"Marca"} 
-          list={marcas}
-        />
-        <Searchbox 
-          onChange={handleOnModeloChange} 
-          value={(modelo && modelo.name) ?? ""} 
-          label={"Modelo"} 
+    <form onSubmit={handleSave} className={`${styles.form} w-full flex flex-col justify-start items-start`}>
+      <div className='grid grid-cols-2 gap-4 justify-start items-start'>
+        <Searchbox
+          onChange={handleOnModeloChange}
+          value={(modelo && modelo.modelos_descripcion) ?? ""}
+          label={"Modelo"}
           list={modelos}
+          accessor={"modelos_descripcion"}
+          identifier={"id_modelo"}
         />
+        <label htmlFor="marca" className='w-full'>
+          <span>Marca:</span>
+          <input
+            type="text"
+            id="marca"
+            value={(marca && marca.marcas_descripcion) ?? ""}
+            className={styles['input']} readOnly />
+        </label>
       </div>
       <div className='grid grid-cols-2 gap-4'>
-        <Searchbox 
-          onChange={handleOnFamiliaChange} 
-          value={(familia && familia.name) ?? ""} 
-          label={"Familia"} 
-          list={familias}
-        />
+        <label htmlFor="familia" className='w-full'>
+          <span>Familia:</span>
+          <input
+            type="text"
+            id="familia"
+            value={(familia && familia.familias_descripcion) ?? ""}
+            className={styles['input']} readOnly />
+        </label>
         <label htmlFor="subfamilia" className='w-full'>
           <span>Subfamilia:</span>
-          <input 
-            type="text" 
-            id="subfamilia" 
-            value={(familia && familia.subfamilia) ?? ""} 
-            className={styles['input']} readOnly/>
+          <input
+            type="text"
+            id="subfamilia"
+            value={(subfamilia && subfamilia.subfamilias_descripcion) ?? ""}
+            className={styles['input']} readOnly />
         </label>
       </div>
       <div className="w-full grid grid-cols-2 gap-4">
         <label htmlFor="serie" className='w-full'>
           <span>Serie:</span>
-          <input 
-            type="text" 
-            id="serie" 
-            className={styles['input']} 
+          <input
+            type="text"
+            id="serie"
+            value={serie}
+            className={styles['input']}
             onChange={(e) => setSerie(e.target.value)}
           />
         </label>
         <label htmlFor="inventorynumber" className='w-full'>
           <span>Nro de Inventario:</span>
-          <input 
-            type="text" 
-            id="inventorynumber" 
-            className={styles['input']}  
+          <input
+            type="text"
+            id="inventorynumber"
+            value={inventoryNumber}
+            className={styles['input']}
             onChange={(e) => setInventoryNumber(e.target.value)}
           />
         </label>
       </div>
       <div className="w-full">
-        <Searchbox 
-          onChange={handleOnUbicacionesChange} 
-          value={(ubicacion && ubicacion.name) ?? ""} 
-          label={"Ubicación"} 
-          list={ubicaciones}
+        <Searchbox
+          onChange={handleOnUbicacionesChange}
+          value={(ubicacion && ubicacion.sedes_descripcion) ?? ""}
+          label={"Ubicación"}
+          list={sedes}
+          accessor={"sedes_descripcion"}
+          identifier={"id_sede"}
         />
       </div>
       <div className='w-full'>

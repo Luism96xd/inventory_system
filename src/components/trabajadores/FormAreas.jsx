@@ -5,11 +5,13 @@ import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
 import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const FormAreas = () => {
     const [gerencia, setGerencia] = useState(null);
     const [descripcion, setDescripcion] = useState("");
     const [gerencias, setGerencias] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         const getData = async () => {
@@ -37,6 +39,7 @@ const FormAreas = () => {
         }
         setDescripcion("");
         setGerencia(null);
+        router.refresh()
     }
     return (
         <form onSubmit={handleSave}>
@@ -55,11 +58,11 @@ const FormAreas = () => {
             <div className="w-full p-4">
                 <Searchbox
                     onChange={handleOnGerenciaChange}
-                    value={(gerencia && gerencia.descripcion) ?? ""}
+                    value={(gerencia && gerencia.gerencias_descripcion) ?? ""}
                     label={"Gerencia"}
                     list={gerencias}
                     identifier={"id_gerencia"}
-                    accessor={"descripcion"}
+                    accessor={"gerencias_descripcion"}
                 />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>

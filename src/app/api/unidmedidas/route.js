@@ -3,31 +3,30 @@ import { supabase } from '@/lib/supabase-client';
 
 export async function GET(request) {
     const { data, error } = await supabase
-        .from('cargos')
+        .from('unid_medidas')
         .select();
     if(error){
         return NextResponse.json([]);
     }
-    
     return NextResponse.json(data);
 }
 
 export async function POST(request) {
     const requestData = await request.json();
-    const { descripcion, idArea } = requestData;
+    const { descripcion, inactivo, abrev} = requestData;
 
     const { data, error } = await supabase
-        .from('cargos')
+        .from('unid_medidas')
         .insert([
-            { id_area: idArea, cargos_descripcion: descripcion },
+            { unid_medidas_descripcion: descripcion, inactivo: inactivo, abrev: abrev },
         ])
         .select()
 
     if (error) {
         console.log(error);
-        return NextResponse.json({ 'message': 'Hubo un error al insertar' });
+        return NextResponse.json({ 'message': 'THubo un error al insertar' });
     }
 
     console.log(data);
-    return NextResponse.json({ 'message': `Se ha creado el cargo con id: ${data[0].id}` });
+    return NextResponse.json({ 'message': `Se ha creado la unidad de medida con id: ${data[0].id}` });
 }

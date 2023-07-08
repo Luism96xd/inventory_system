@@ -35,7 +35,7 @@ const Searchbox = ({ value, onChange, label, list, accessor, identifier}) => {
             </label>
 
             {showModal && (
-                <Modal onClose={handleModalClose}>
+                <Modal title={""} onClose={handleModalClose}>
                     <ItemList 
                         items={list} 
                         onSelect={handleItemSelect} 

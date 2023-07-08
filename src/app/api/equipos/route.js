@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase-client';
 
 export async function GET(request) {
     const { data, error } = await supabase
-        .from('cargos')
+        .from('equipos')
         .select();
     if(error){
         return NextResponse.json([]);
@@ -14,12 +14,20 @@ export async function GET(request) {
 
 export async function POST(request) {
     const requestData = await request.json();
-    const { descripcion, idArea } = requestData;
+    const { idModelo, serie, inventoryNumber, idSede, idMarca, idSubfamilia, idFamilia} = requestData;
 
     const { data, error } = await supabase
-        .from('cargos')
-        .insert([
-            { id_area: idArea, cargos_descripcion: descripcion },
+        .from('equipos')
+        .insert([ 
+            { 
+                id_modelo: idModelo,
+                serial: serie,
+                inventory_number: inventoryNumber,
+                id_sede: idSede,
+                id_marca: idMarca,
+                id_subfamilia: idSubfamilia,
+                id_familia: idFamilia
+            },
         ])
         .select()
 
@@ -29,5 +37,5 @@ export async function POST(request) {
     }
 
     console.log(data);
-    return NextResponse.json({ 'message': `Se ha creado el cargo con id: ${data[0].id}` });
+    return NextResponse.json({ 'message': `Se ha creado el equipo con id: ${data[0].id}` });
 }

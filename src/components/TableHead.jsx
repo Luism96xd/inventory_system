@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TableHead = ({ columns, handleSorting, headerColor = "#f5f5f5" }) => {
+const TableHead = ({ columns, handleSorting, headerColor = "#f5f5f5", actions = false }) => {
     const [sortColumn, setSortColumn] = useState("");
     const [order, setOrder] = useState("asc");
 
@@ -20,19 +20,26 @@ const TableHead = ({ columns, handleSorting, headerColor = "#f5f5f5" }) => {
                         <th
                             key={accessor}
                             onClick={sortable ? () => handleSortingChange(accessor) : null}
-                            style={{ backgroundColor: headerColor}}
+                            style={{ backgroundColor: headerColor }}
                             className={sortable ? 'sortable' : ''}
                         >
                             {label}
                             {sortable && (
-                            <span className="sort-icon">
-                                {sortColumn === accessor &&
-                                (order === 'asc' ? '▲' : '▼')}
-                            </span>
+                                <span className="sort-icon">
+                                    {sortColumn === accessor &&
+                                        (order === 'asc' ? '▲' : '▼')}
+                                </span>
                             )}
                         </th>
-                    );
-                })}
+                    )
+                })
+                }
+                {actions && (
+                    <th>
+                        Actions
+                    </th>
+                    )
+                }
             </tr>
         </thead>
     );

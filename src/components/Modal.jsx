@@ -1,12 +1,17 @@
 import styles from '@/styles/Modals.module.css';
 
-const Modal = ({ onClose, children }) => {
+const Modal = ({ onClose, title, children }) => {
     return (
         <div className={styles["modal"]}>
-            <button className={styles["modal-close"]} onClick={onClose}>
-                Close
-            </button>
-            <div className={styles["modal-content"]}>{children}</div>
+            <div className={styles["modal-content"]}>
+                <div className={styles["modal-header"]}>
+                    <div>{title}</div>
+                    <button className={styles["modal-close"]} onClick={onClose}>
+                        <span className='text-2xl'>&times;</span>
+                    </button>
+                </div>
+                {children}
+            </div>
         </div>
     );
 }

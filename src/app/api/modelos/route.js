@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase-client';
 
 export async function GET(request) {
     const { data, error } = await supabase
-        .from('cargos')
+        .from('modelos')
         .select();
     if(error){
         return NextResponse.json([]);
@@ -14,12 +14,12 @@ export async function GET(request) {
 
 export async function POST(request) {
     const requestData = await request.json();
-    const { descripcion, idArea } = requestData;
+    const { descripcion, inactivo, idMarca, idUnidMedida } = requestData;
 
     const { data, error } = await supabase
-        .from('cargos')
+        .from('modelos')
         .insert([
-            { id_area: idArea, cargos_descripcion: descripcion },
+            { modelos_descripcion: descripcion, inactivo: inactivo, id_marca: idMarca, id_unid_medida: idUnidMedida },
         ])
         .select()
 
@@ -29,5 +29,5 @@ export async function POST(request) {
     }
 
     console.log(data);
-    return NextResponse.json({ 'message': `Se ha creado el cargo con id: ${data[0].id}` });
+    return NextResponse.json({ 'message': `Se ha creado el modelo con id: ${data[0].id}` });
 }

@@ -1,47 +1,58 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
 import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-function FormCargos() {
-    const [area, setArea] = useState(null);
+const FormModelos = () => {
+    const [marca, setMarca] = useState([]);
     const [descripcion, setDescripcion] = useState("");
-    const [areas, setAreas] = useState(null);
+    const [inactivo, setInactivo] = useState(false);
+    const [unidMedida, setUnidMedida] = useState(null);
+    const [marcas, setMarcas] = useState([]);
+    const [unidMedidas, setUnidMedidas] = useState([]);
+
     const router = useRouter();
 
     useEffect(() => {
         const getData = async () => {
-            const { data } = await supabase.from('areas').select();
-            setAreas(data)
+            const { data: marcas } = await supabase.from('marcas').select();
+            const { data: unid_medidas } = await supabase.from('unid_medidas').select();
+
+            setMarcas(marcas)
+            setUnidMedidas(unid_medidas)
         }
         getData()
     }, [])
-        
-    const handleOnAreaChange = (value) => {
-        setArea(value);
-    }
-    
+
     const handleSave = async (e) => {
         e.preventDefault();
-        if(area.id_area == null){
-            return
-        }
         const data = {
             descripcion: descripcion,
-            idArea: area.id_area
+            inactivo: inactivo,
+            idMarca: marca.id_marca,
+            idUnidMedida: unidMedida.id_unid_medida
         }
         console.log(data);
-        const response = await axios.post('/api/cargos', data);
+        const response = await axios.post('/api/modelos', data);
         console.log(response)
         setDescripcion("");
-        setArea(null);
-        router.refresh();
+        setInactivo(false);
+        setMarca(null);
+        setUnidMedida(null)
+        router.refresh()
     }
-    
+       
+    const handleOnMarcaChange = (value) => {
+        setMarca(value);
+    }
+    const handleOnUnidMedidaChange = (value) => {
+        setUnidMedida(value);
+    }
+
     return (
         <form onSubmit={handleSave}>
             <div className='w-full p-4'>
@@ -57,13 +68,35 @@ function FormCargos() {
                 </label>
             </div>
             <div className="w-full p-4">
+            <label htmlFor="inactivo">
+                    <span>Inactivo:</span>
+                    <input
+                        type="checkbox"
+                        id="inactivo"
+                        value={inactivo}
+                        className={styles['input']}
+                        onChange={(e) => setInactivo(e.target.value)}
+                    />
+                </label>
+            </div>
+            <div className="w-full p-4">
                 <Searchbox
-                    onChange={handleOnAreaChange}
-                    value={(area && area.areas_descripcion) ?? ""}
-                    label={"Area"}
-                    list={areas}
-                    accessor={'areas_descripcion'}
-                    identifier={'id_area'}
+                    onChange={handleOnMarcaChange}
+                    value={(marca && marca.marcas_descripcion) ?? ""}
+                    label={"Marca"}
+                    list={marcas}
+                    identifier={"id_marca"}
+                    accessor={"marcas_descripcion"}
+                />
+            </div>
+            <div className="w-full p-4">
+                <Searchbox
+                    onChange={handleOnUnidMedidaChange}
+                    value={(unidMedida && unidMedida.unid_medidas_descripcion) ?? ""}
+                    label={"Unidad de Medida"}
+                    list={unidMedidas}
+                    identifier={"id_unid_medida"}
+                    accessor={"unid_medidas_descripcion"}
                 />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
@@ -84,4 +117,4 @@ function FormCargos() {
     )
 }
 
-export default FormCargos
+export default FormModelos;

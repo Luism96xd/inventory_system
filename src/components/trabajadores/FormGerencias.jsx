@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 function FormGerencias() {
     const [descripcion, setDescripcion] = useState("");
+    const router = useRouter();
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -17,6 +19,7 @@ function FormGerencias() {
         const response = await axios.post('/api/gerencias', data);
         console.log(response)
         setDescripcion("");
+        router.refresh()
 
     }
     return (

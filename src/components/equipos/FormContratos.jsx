@@ -1,49 +1,35 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
-import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-function FormCargos() {
-    const [area, setArea] = useState(null);
+function FormContratos() {
     const [descripcion, setDescripcion] = useState("");
-    const [areas, setAreas] = useState(null);
+    const [inactivo, setInactivo] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        const getData = async () => {
-            const { data } = await supabase.from('areas').select();
-            setAreas(data)
-        }
-        getData()
-    }, [])
-        
-    const handleOnAreaChange = (value) => {
-        setArea(value);
-    }
-    
     const handleSave = async (e) => {
         e.preventDefault();
-        if(area.id_area == null){
-            return
-        }
         const data = {
             descripcion: descripcion,
-            idArea: area.id_area
+            inactivo: inactivo
         }
         console.log(data);
-        const response = await axios.post('/api/cargos', data);
+        const response = await axios.post('/api/contratos', data);
         console.log(response)
         setDescripcion("");
-        setArea(null);
-        router.refresh();
+        setInactivo(false);
+        router.refresh()
+
     }
-    
     return (
         <form onSubmit={handleSave}>
+            <div className='w-full p-4'>
+                <h2 className='text-xl font-bold'>Contratos:</h2>
+            </div>
             <div className='w-full p-4'>
                 <label htmlFor="descripcion" className='w-full'>
                     <span>Descripción:</span>
@@ -57,14 +43,16 @@ function FormCargos() {
                 </label>
             </div>
             <div className="w-full p-4">
-                <Searchbox
-                    onChange={handleOnAreaChange}
-                    value={(area && area.areas_descripcion) ?? ""}
-                    label={"Area"}
-                    list={areas}
-                    accessor={'areas_descripcion'}
-                    identifier={'id_area'}
-                />
+            <label htmlFor="inactivo">
+                    <span>Inactivo:</span>
+                    <input
+                        type="checkbox"
+                        id="inactivo"
+                        value={inactivo}
+                        className={styles['input']}
+                        onChange={(e) => setInactivo(e.target.value)}
+                    />
+                </label>
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
                 <button className={`btn bg-white text-black`}>
@@ -84,4 +72,4 @@ function FormCargos() {
     )
 }
 
-export default FormCargos
+export default FormContratos;

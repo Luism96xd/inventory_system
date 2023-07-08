@@ -3,18 +3,18 @@ import { useState } from 'react';
 import styles from '@/styles/Tabs.module.css';
 import { useStore } from '../stores/store';
 
-const TabbedView = ({ tabs, handleOnTabChange}) => {
+const TabbedView = ({ tabs, children, handleOnTabChange }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const {setCurrentTab} = useStore.getState();
+  const { setCurrentTab } = useStore.getState();
 
   const handleTabClick = (tabIndex) => {
     setActiveTab(tabIndex);
     setCurrentTab(tabIndex);
-    handleOnTabChange(tabIndex)
+    handleOnTabChange && handleOnTabChange(tabIndex)
     //console.log(useStore.getState().currentTab)
   };
 
-  const activeTabContent = tabs[activeTab]?.content;
+  const activeTabContent = children ? children[activeTab] : <div></div>; //?.content;
 
   return (
     <>

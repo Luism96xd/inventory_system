@@ -1,49 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from "@/styles/Forms.module.css";
 import Searchbox from '@/components/SearchBox';
-import { supabase } from '@/lib/supabase-client';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-function FormCargos() {
-    const [area, setArea] = useState(null);
+function FormSedes() {
     const [descripcion, setDescripcion] = useState("");
-    const [areas, setAreas] = useState(null);
     const router = useRouter();
 
-    useEffect(() => {
-        const getData = async () => {
-            const { data } = await supabase.from('areas').select();
-            setAreas(data)
-        }
-        getData()
-    }, [])
-        
-    const handleOnAreaChange = (value) => {
-        setArea(value);
-    }
-    
     const handleSave = async (e) => {
         e.preventDefault();
-        if(area.id_area == null){
-            return
-        }
         const data = {
-            descripcion: descripcion,
-            idArea: area.id_area
+            descripcion: descripcion
         }
         console.log(data);
-        const response = await axios.post('/api/cargos', data);
+        const response = await axios.post('/api/sedes', data);
         console.log(response)
         setDescripcion("");
-        setArea(null);
-        router.refresh();
+        router.refresh()
+
     }
-    
     return (
         <form onSubmit={handleSave}>
+            <div className='w-full p-4'>
+                <h2 className='text-xl font-bold'>Sedes:</h2>
+            </div>
             <div className='w-full p-4'>
                 <label htmlFor="descripcion" className='w-full'>
                     <span>Descripción:</span>
@@ -55,16 +38,6 @@ function FormCargos() {
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </label>
-            </div>
-            <div className="w-full p-4">
-                <Searchbox
-                    onChange={handleOnAreaChange}
-                    value={(area && area.areas_descripcion) ?? ""}
-                    label={"Area"}
-                    list={areas}
-                    accessor={'areas_descripcion'}
-                    identifier={'id_area'}
-                />
             </div>
             <div className='w-full grid grid-cols-2 p-4 gap-4'>
                 <button className={`btn bg-white text-black`}>
@@ -84,4 +57,4 @@ function FormCargos() {
     )
 }
 
-export default FormCargos
+export default FormSedes;

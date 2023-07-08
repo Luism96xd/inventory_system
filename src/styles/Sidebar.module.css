@@ -82,3 +82,17 @@
 .sidebar ul li:hover {
   background-color: #88a8ff;
 }
+
+
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  font-size: 0.5em;
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
